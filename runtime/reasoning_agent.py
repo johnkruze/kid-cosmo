@@ -18,12 +18,22 @@ try:
 except ImportError:
     HAS_MLX = False
 
+# Import model configuration
+from model_config import get_model_path, MODEL_PROFILES
+
 class ReasoningAgent:
-    def __init__(self, model_path: str = "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"):
-        self.model_path = model_path
+    def __init__(self, model_path: str = None, profile: str = None):
+        # Use model_config to resolve path from profile or environment
+        self.model_path = model_path or get_model_path(profile)
+        self.profile = profile or os.environ.get("KIDCOSMO_PROFILE", "fast")
         self.model = None
         self.tokenizer = None
         self.is_loaded = False
+
+        # Log which model is being used
+        profile_info = MODEL_PROFILES.get(self.profile, {})
+        print(f"🧠 ReasoningAgent initialized with profile: {self.profile}")
+        print(f"   Model: {profile_info.get('name', self.model_path)}")
 
     def _load_model(self):
         if not HAS_MLX:

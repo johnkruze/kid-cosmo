@@ -7,7 +7,8 @@ Broadcats MAVLink telemetry for underwater missions.
 
 import time
 import socket
-from pymavlink import mavutil
+import hashlib
+import json
 
 def run_mock(target_ip="127.0.0.1", target_port=14550):
     print(f"📡 Starting ArduSub Mock: {target_ip}:{target_port}")
@@ -15,6 +16,7 @@ def run_mock(target_ip="127.0.0.1", target_port=14550):
     master = mavutil.mavlink_connection(f"udpout:{target_ip}:{target_port}")
     boot_time = time.time()
     step = 0
+    cumulative_hash = hashlib.sha256()
     
     while True:
         current_time = time.time() - boot_time
@@ -48,6 +50,16 @@ def run_mock(target_ip="127.0.0.1", target_port=14550):
         depth = 10.0 + (step * 0.1) # Slowly descending
         pressure = 101325 + (1025 * 9.81 * depth) # Hydrostatic
         
+        # EXECUTING GAUSSIAN HASHING: Update cumulative physics fingerprint
+        state_bits = {
+            "t": round(current_time, 2),
+            "depth": round(depth, 2),
+            "roll": 0.02 * (step % 5),
+            "pitch": 0.03 * (step % 8)
+        }
+        cumulative_hash.update(json.dumps(state_bits, sort_keys=True).encode())
+        current_physics_hash = cumulative_hash.hexdigest()
+
         # ArduSub uses VFR_HUD.alt for depth (typically negative)
         master.mav.vfr_hud_send(
             0.5,                # airspeed
@@ -56,6 +68,13 @@ def run_mock(target_ip="127.0.0.1", target_port=14550):
             50,                 # throttle
             -depth,             # alt (depth as negative altitude)
             -0.1                # climb rate
+        )
+
+        # Broadcast Physics Fingerprint via MAVLink STATUSTEXT
+        # We prefix with 'HASH:' so the bridge can easily parse it
+        master.mav.statustext_send(
+            mavutil.mavlink.MAV_SEVERITY_INFO,
+            f"HASH:{current_physics_hash}".encode()
         )
 
         # 5. Acoustic Link Dropout (Simulate loss at T=20)

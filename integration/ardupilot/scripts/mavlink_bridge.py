@@ -27,6 +27,7 @@ class MAVLinkBridge:
             "alt": 0.0
         }
         self.is_blackout = False
+        self.current_physics_hash = "0x0000"
 
     def wait_for_heartbeat(self):
         print("⌛ Waiting for ArduPilot heartbeat...")
@@ -67,6 +68,11 @@ class MAVLinkBridge:
             
         elif msg_type == "VFR_HUD":
             self.telemetry["alt"] = msg.alt
+            
+        elif msg_type == "STATUSTEXT":
+            text = msg.text
+            if text.startswith("HASH:"):
+                self.current_physics_hash = text.split("HASH:")[1]
 
     def get_snapshot(self) -> Dict[str, Any]:
         """Returns a Kid Cosmo compatible telemetry snapshot."""
@@ -87,7 +93,8 @@ class MAVLinkBridge:
                 },
                 "alt": round(self.telemetry["alt"], 2)
             },
-            "is_blackout": self.is_blackout
+            "is_blackout": self.is_blackout,
+            "parent_trajectory_hash": self.current_physics_hash
         }
 
     def set_mode(self, mode_name: str):

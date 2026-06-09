@@ -1,39 +1,54 @@
 # Kid Cosmo
 
-**MCP-native autonomy for when Earth isn't answering.**
+**"The OS for Robotics. Grounded in Physics. Sovereign by Design."**
 
-Kid Cosmo is an MCP-native reasoning engine for autonomous vehicles operating in denied environments — GPS blackouts, communication loss, sensor degradation. Instead of failing when the cloud link dies, Kid Cosmo runs a small language model (Qwen 2.5 7B) directly on the vehicle to make physics-grounded decisions.
+Kid Cosmo is the operating system and software layer for autonomous robotics. It sits above the G^G physics corpus and below the hardware — the reasoning runtime that pairs cryptographically verified physics trajectories with local cognitive inference.
 
-Every decision is exposed as an MCP tool, making Kid Cosmo's reasoning queryable by any MCP-compatible AI agent.
+The body data lives here. The decisions live here. The sovereignty lives here.
+
+---
+
+## The Architecture
+
+```
+G^G CORPUS (physics ground truth)
+  G^G Parquet datasets — 13 substrates, 1000Hz, SHA-256 sealed per step
+  Mars, Orbital, Marine, Terran, Mycelial,
+  Energy, Atheric, Plutonian, Celestial, Asteroid + 3 more
+  SHA-256 verified. ICP timestamped.
+        |
+        v
+KID COSMO (the OS layer)
+  Paired physics-reasoning manifests
+  Dual-brain: Reflex (fast) + Somatic (deliberative)
+  Dark Window: full autonomy under communication denial
+  MCP-native tool use mapped directly to physics
+        |
+        v
+HARDWARE (the body)
+  ArduPilot / ArduSub MAVLink integration
+  Any robot that needs to feel forces, not just measure them
+```
 
 ---
 
 ## What It Does
 
-1. **Monitors for "Dark Window" conditions** — GPS loss, comms blackout, sensor anomalies
-2. **Triggers local reasoning** — A small LLM generates structured decisions without network dependency
-3. **Outputs Decision Manifests** — Every choice is documented with sensor inputs, deliberation, and expected outcomes
-4. **Exposes via MCP** — All decisions and telemetry are queryable through the Model Context Protocol
-5. **Bridges to hardware** — MAVLink integration for ArduPilot drones, extensible to ROS2 and others
+1. **Monitors for Dark Window conditions** — GPS loss, comms blackout, sensor failure
+2. **Triggers Sovereign Reasoning** — local inference, no cloud dependency, no uplink required
+3. **Outputs Reasoning Manifests** — every decision paired to its parent physics trajectory, SHA-256 sealed
+4. **Accumulates Embodied Memory** — procedural knowledge that compounds across runs
+5. **Hardware Bridge** — MAVLink integration for direct actuation
 
 ---
 
-## Quick Start
+## Why It Exists
 
-```bash
-# Clone
-git clone https://github.com/youhavethepower2025/kid-cosmo.git
-cd kid-cosmo
+Cloud-dependent intelligence is remote control with extra steps.
 
-# Install dependencies (Apple Silicon recommended for MLX)
-pip install -r requirements.txt
+When the link severs — conjunction blackout, GPS denial, acoustic dropout — the robot either has a physics-grounded prior or it has nothing. Kid Cosmo is that prior. Built from millions of trajectories across every substrate a robot will ever touch.
 
-# Run the MCP data server
-python domains/underwater/data_interface/mcp_server.py
-
-# Or run the ArduPilot integration (requires SITL)
-python integration/ardupilot/scripts/sovereign_pilot.py
-```
+The Dark Window is not an edge case. It is the design constraint.
 
 ---
 
@@ -41,61 +56,45 @@ python integration/ardupilot/scripts/sovereign_pilot.py
 
 ```
 kid-cosmo/
-├── spec/                 # Reasoning Manifest v1.0 specification
-├── runtime/              # Local reasoning engine (MLX + Qwen)
-├── integration/          # ArduPilot MAVLink bridge
-│   └── ardupilot/
-├── domains/              # Domain-specific physics + data
-│   └── underwater/       # AUV/ROV autonomy
-└── samples/              # Example decision manifests
+  spec/          Reasoning Manifest v1.0 standard
+  runtime/       Sovereign reasoning engine (MLX + Qwen)
+  integration/   Hardware bridges (ArduPilot / ArduSub)
+  domains/       Domain abstractions (Underwater, Orbital, Terran, etc.)
+  samples/       Paired dataset examples — physics + decision manifest
 ```
 
 ---
 
 ## The Reasoning Manifest
 
-Every decision Kid Cosmo makes is captured in a structured JSON manifest:
+Every decision is cryptographically anchored to its physics:
 
 ```json
 {
   "mission_id": "cosmo_abc123",
   "is_dark_window": true,
+  "epistemic_status": "503_CONJUNCTION_BLACKOUT",
   "agent_reasoning": {
-    "sensory_synthesis": {
-      "inputs": ["GPS_LOSS", "ALTITUDE_HOLD"],
-      "interpretation": "GPS signal lost. Switching to barometric altitude hold."
-    },
-    "decision": {
-      "actuator_command": "SET_MODE ALT_HOLD",
-      "expected_outcome": "Maintain altitude until GPS recovery"
-    }
+    "sensory_synthesis": { ... },
+    "internal_deliberation": [ ... ],
+    "decision": { "actuator_command": "STABILIZE" }
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "traj_dark_xyz789",
+    "parent_trajectory_hash": "SHA256_PHYSICS_PROOF"
   }
 }
 ```
 
-See [spec/REASONING_MANIFEST_v1.md](spec/REASONING_MANIFEST_v1.md) for the full specification.
-
 ---
 
-## Supported Platforms
+## Status
 
-| Platform | Status | Notes |
-|----------|--------|-------|
-| ArduPilot (Copter/Plane) | Working | MAVLink bridge included |
-| Underwater (AUV/ROV) | Samples | Physics abstractions + manifests |
-| ROS2 | Planned | — |
-| CARLA | Planned | — |
+Physics corpus: G^G Parquet datasets live (May 2026)
+Reasoning layer: operational
+Hardware integration: MAVLink active
+OS expansion: in progress
 
----
+Protocol Company. John Kruze. johnfkruze@gmail.com
 
-## Requirements
-
-- Python 3.10+
-- Apple Silicon recommended (for MLX local inference)
-- ArduPilot SITL for drone testing
-
----
-
-## License
-
-MIT — See [LICENSE](LICENSE)
+*"The body knows before the mind. The force is felt before it is named."*

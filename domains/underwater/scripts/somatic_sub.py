@@ -55,7 +55,7 @@ class SomaticSub:
                     epistemic_isolation=True,
                     trajectory_context={
                         "parent_trajectory_id": f"sub_sitl_{int(time.time())}",
-                        "parent_trajectory_hash": "SUB_SITL_MOCK",
+                        "parent_trajectory_hash": snapshot.get("parent_trajectory_hash", "0x0000"),
                         "anomaly_type": "ACOUSTIC_LINK_LOSS",
                         "timestep_of_decision": snapshot["t"],
                         "telemetry_at_decision": snapshot,
