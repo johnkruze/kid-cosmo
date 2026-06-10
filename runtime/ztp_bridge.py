@@ -53,6 +53,36 @@ class C_HandshakeResult(ctypes.Structure):
         return f"C_HandshakeResult(success={self.success}, resonance={self.resonance:.4f}, avg_snr_db={self.avg_snr_db:.2f}dB)"
 
 
+class C_MarsState(ctypes.Structure):
+    _fields_ = [
+        ("position", ctypes.c_double * 3),
+        ("velocity", ctypes.c_double * 3),
+        ("dry_mass", ctypes.c_double),
+        ("drag_area", ctypes.c_double),
+        ("cd", ctypes.c_double),
+        ("fuel_mass", ctypes.c_double),
+        ("specific_impulse", ctypes.c_double),
+    ]
+
+    def __repr__(self):
+        pos = list(self.position)
+        vel = list(self.velocity)
+        return (f"C_MarsState(pos={pos}, vel={vel}, fuel={self.fuel_mass:.2f}kg)")
+
+
+class C_MarsResult(ctypes.Structure):
+    _fields_ = [
+        ("density", ctypes.c_double),
+        ("drag_force", ctypes.c_double * 3),
+        ("net_accel", ctypes.c_double * 3),
+    ]
+
+    def __repr__(self):
+        drag = list(self.drag_force)
+        accel = list(self.net_accel)
+        return f"C_MarsResult(density={self.density:.6f}, drag={drag}, accel={accel})"
+
+
 # ─── LIBRARY LOADER ───────────────────────────────────────────────────────────
 
 def load_ztp_library() -> ctypes.CDLL:
@@ -74,7 +104,8 @@ def load_ztp_library() -> ctypes.CDLL:
         if os.path.exists(path):
             try:
                 lib = ctypes.CDLL(path)
-                print(f"✅ Loaded ztp_runtime shared library from: {path}")
+                if os.environ.get("KIDCOSMO_SILENT") != "1":
+                    print(f"✅ Loaded ztp_runtime shared library from: {path}")
                 return lib
             except Exception as e:
                 print(f"⚠️ Failed to load library at {path}: {e}")
@@ -82,7 +113,8 @@ def load_ztp_library() -> ctypes.CDLL:
     # Fallback to standard library search
     try:
         lib = ctypes.CDLL("libztp_runtime.dylib")
-        print("✅ Loaded libztp_runtime.dylib from system library search path.")
+        if os.environ.get("KIDCOSMO_SILENT") != "1":
+            print("✅ Loaded libztp_runtime.dylib from system library search path.")
         return lib
     except Exception:
         raise FileNotFoundError(
@@ -131,11 +163,20 @@ try:
         ctypes.c_double,                 # distance_km
     ]
     _lib.ztp_atheric_handshake.restype = C_HandshakeResult
+
+    # Configure: ztp_mars_step
+    _lib.ztp_mars_step.argtypes = [
+        ctypes.POINTER(C_MarsState),     # state
+        ctypes.c_double,                 # retro_thrust
+        ctypes.c_double,                 # dt
+    ]
+    _lib.ztp_mars_step.restype = C_MarsResult
     
     HAS_ZTP_LIB = True
 
 except Exception as e:
-    print(f"❌ Could not initialize ztp-runtime C bindings: {e}")
+    if os.environ.get("KIDCOSMO_SILENT") != "1":
+        print(f"❌ Could not initialize ztp-runtime C bindings: {e}")
     HAS_ZTP_LIB = False
 
 
@@ -198,6 +239,13 @@ def atheric_handshake(seed: bytes, strength: float, distance_km: float) -> C_Han
     )
 
 
+def mars_step(state: C_MarsState, retro_thrust: float, dt: float) -> C_MarsResult:
+    """Wrapper to run Mars EDL step on vehicle state."""
+    if not HAS_ZTP_LIB:
+        raise RuntimeError("ZTP Library not loaded.")
+    return _lib.ztp_mars_step(ctypes.byref(state), retro_thrust, dt)
+
+
 # ─── QUICK TEST ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
@@ -230,6 +278,22 @@ if __name__ == "__main__":
         rf_res = atheric_handshake(test_seed, 10.0, 15.0)
         print(f"  Result: {rf_res}")
         
+        # Test 4: Mars EDL
+        print("\nTesting Mars EDL Step:")
+        m_state = C_MarsState()
+        m_state.position[2] = 20000.0  # 20km
+        m_state.velocity[2] = -150.0   # descending
+        m_state.dry_mass = 1000.0
+        m_state.drag_area = 10.0
+        m_state.cd = 1.2
+        m_state.fuel_mass = 400.0
+        m_state.specific_impulse = 290.0
+        
+        print(f"  Before: {m_state}")
+        m_res = mars_step(m_state, 15000.0, 0.1)
+        print(f"  After: {m_state}")
+        print(f"  FFI Output: {m_res}")
+
         print("\nAll C-FFI Bridge tests complete.")
     else:
         print("Failed to run tests due to missing library bindings.")

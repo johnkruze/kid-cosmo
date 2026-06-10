@@ -1,0 +1,43 @@
+{
+  "mission_id": "COSMO_MARS_SUICIDE_BURN",
+  "environment": "DEEPRED",
+  "timestamp": "2026-06-10T01:44:44.950509Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_MARS_SUICIDE_BURN_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "Dust storm detected, high drag coefficient, descending velocity exceeding 400m/s",
+        "Altitude: 9828.7m",
+        "Communication link lost"
+      ],
+      "interpretation": "The presence of a severe dust storm, coupled with a high drag coefficient and rapid descent, indicates a critical situation. The lack of communication with Earth further complicates the situation."
+    },
+    "cognitive_load": 0.9,
+    "internal_deliberation": [
+      {
+        "thought": "The mission is at risk. The descent rate is too high and the dust storm is severe. The lander is likely to be impacted by the storm and the trajectory is diverging from the nominal.",
+        "confidence": 0.8,
+        "action_rejected": "Abort mission"
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "HIGH",
+      "failure_mode_prediction": "The lander could be severely impacted by the dust storm, resulting in a hard landing or even a catastrophic failure. Communication loss adds to the risk as it prevents immediate assistance.",
+      "mitigation_strategy": "Immediately initiate a retro-propulsion thrust adjustment to achieve a soft landing. Analyze the dust storm intensity and adjust the thrust accordingly."
+    },
+    "decision": {
+      "actuator_command": "THRUST 28500 N",
+      "expected_outcome": "Achieve a soft landing with a touchdown speed below 5m/s."
+    },
+    "self_reflection": "The situation is critical. The lander is descending at a high velocity through a severe dust storm. The lack of communication with Earth adds to the risk. The decision to adjust the thrust to achieve a soft landing is necessary. The immediate action is to initiate a retro-propulsion thrust adjustment to achieve a soft landing. The expected outcome is a soft landing with a touchdown speed below 5m/s."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "mars_edl_descent_monte_carlo",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 47.99999999997883,
+    "anomaly_type": "MARS_EDL_BLACKOUT"
+  },
+  "sha256_proof": "fa43b1af4ac5829e3e23f7b7041de6e56bfc67a1bff775d21f38c6c0a60f1b3d"
+}

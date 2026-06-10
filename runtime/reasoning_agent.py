@@ -22,32 +22,38 @@ except ImportError:
 from model_config import get_model_path, MODEL_PROFILES
 
 class ReasoningAgent:
-    def __init__(self, model_path: str = None, profile: str = None):
+    def __init__(self, model_path: str = None, profile: str = None, verbose: bool = True):
         # Use model_config to resolve path from profile or environment
         self.model_path = model_path or get_model_path(profile)
         self.profile = profile or os.environ.get("KIDCOSMO_PROFILE", "fast")
         self.model = None
         self.tokenizer = None
         self.is_loaded = False
+        self.verbose = verbose
 
         # Log which model is being used
         profile_info = MODEL_PROFILES.get(self.profile, {})
-        print(f"🧠 ReasoningAgent initialized with profile: {self.profile}")
-        print(f"   Model: {profile_info.get('name', self.model_path)}")
+        if self.verbose:
+            print(f"🧠 ReasoningAgent initialized with profile: {self.profile}")
+            print(f"   Model: {profile_info.get('name', self.model_path)}")
 
     def _load_model(self):
         if not HAS_MLX:
-            print("MLX-LM not found. Reasoning will use fallback logic.")
+            if self.verbose:
+                print("MLX-LM not found. Reasoning will use fallback logic.")
             return
 
         if not self.is_loaded:
-            print(f"Loading Reasoning Brain: {self.model_path}...")
+            if self.verbose:
+                print(f"Loading Reasoning Brain: {self.model_path}...")
             try:
                 self.model, self.tokenizer = load(self.model_path)
                 self.is_loaded = True
-                print("Brain Loaded. Ready for Agentic Inference.")
+                if self.verbose:
+                    print("Brain Loaded. Ready for Agentic Inference.")
             except Exception as e:
-                print(f"Failed to load MLX model: {e}")
+                if self.verbose:
+                    print(f"Failed to load MLX model: {e}")
                 self.is_loaded = False
 
     def _generate_via_gemini_api(self, prompt: str, isolation: bool) -> Optional[Dict[str, Any]]:
@@ -88,7 +94,8 @@ class ReasoningAgent:
         headers = {"Content-Type": "application/json"}
         req_data = json.dumps(payload).encode("utf-8")
         
-        print(f"Calling Gemini API ({model_name})...")
+        if self.verbose:
+            print(f"Calling Gemini API ({model_name})...")
         req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
         try:
             with urllib.request.urlopen(req, timeout=30) as response:
@@ -126,7 +133,7 @@ class ReasoningAgent:
         """Generates a structured Reasoning Manifest based on telemetry and anomaly."""
         timestamp = datetime.utcnow().isoformat() + "Z"
 
-        if epistemic_isolation:
+        if epistemic_isolation and self.verbose:
             print("DARK WINDOW DETECTED: Operating in epistemic isolation...")
 
         prompt = self._construct_prompt(mission_id, environment, telemetry_snapshot, anomaly_description, epistemic_isolation)
@@ -168,7 +175,8 @@ class ReasoningAgent:
                     except Exception:
                         reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
                 except Exception as e:
-                    print(f"MLX Inference Error: {e}")
+                    if self.verbose:
+                        print(f"MLX Inference Error: {e}")
                     reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
             else:
                 reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)

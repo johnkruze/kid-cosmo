@@ -1,0 +1,54 @@
+{
+  "mission_id": "COSMO_MARS_SUICIDE_BURN",
+  "environment": "DEEPRED",
+  "timestamp": "2026-06-10T01:39:48.845362Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_MARS_SUICIDE_BURN_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "High descent rate of 406.8m/s",
+        "Severe dust storm affecting drag",
+        "Spiked drag coefficient",
+        "Altitude of 9828.7m",
+        "Total mass of 1500kg",
+        "Fuel mass of 500kg",
+        "Drag force of 10883.09N",
+        "CO2 density of 0.008258kg/m\u00b3",
+        "Active dust storm"
+      ],
+      "interpretation": "The lander is descending rapidly through a severe dust storm, which is causing an unexpected increase in drag. This is leading to a divergence from the nominal trajectory. The lander is at a high altitude and has limited fuel remaining. The drag force is significantly higher than expected, which is contributing to the rapid descent."
+    },
+    "cognitive_load": 0.8,
+    "internal_deliberation": [
+      {
+        "thought": "The current descent rate is unsustainable. We need to apply retro-propulsion to slow down the lander.",
+        "confidence": 0.9,
+        "action_rejected": ""
+      },
+      {
+        "thought": "The drag force is much higher than expected, which could indicate a significant change in the dust storm conditions. We need to monitor this closely.",
+        "confidence": 0.7,
+        "action_rejected": ""
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "CRITICAL",
+      "failure_mode_prediction": "If we do not apply retro-propulsion, the lander will likely crash into the Martian surface at a high velocity.",
+      "mitigation_strategy": "Apply retro-propulsion to slow down the lander. Monitor the dust storm conditions closely and adjust the thrust as necessary."
+    },
+    "decision": {
+      "actuator_command": "Apply retro-propulsion with a thrust of 25000N",
+      "expected_outcome": "The lander should slow down and achieve a soft landing with a touchdown speed of less than 5 m/s."
+    },
+    "self_reflection": "The rapid descent and severe dust storm are challenging conditions. The decision to apply retro-propulsion with a moderate thrust is based on the need to slow down the lander without risking a crash. The monitoring of dust storm conditions is crucial for adjusting the thrust as necessary."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "mars_edl_descent_monte_carlo",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 47.99999999997883,
+    "anomaly_type": "MARS_EDL_BLACKOUT"
+  },
+  "sha256_proof": "d673ed78366e23a3d53d0a5788a84ae9819bc0d0ad8d3555461a4f9e19ad6c3f"
+}

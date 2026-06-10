@@ -1,0 +1,46 @@
+{
+  "mission_id": "COSMO_MARS_SUICIDE_BURN",
+  "environment": "DEEPRED",
+  "timestamp": "2026-06-10T01:07:52.693292Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_MARS_SUICIDE_BURN_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "Dust storm detected, high descent rate, abnormal drag coefficient spike, lack of communication link"
+      ],
+      "interpretation": "The Martian environment is hostile with a severe dust storm, causing a rapid descent rate and abnormal drag coefficient spike. The lack of communication link adds to the critical situation."
+    },
+    "cognitive_load": 0.8,
+    "internal_deliberation": [
+      {
+        "thought": "The descent rate is too high and the drag coefficient is abnormal. This indicates a potential trajectory divergence from the nominal path.",
+        "confidence": 0.9,
+        "action_rejected": "Initiate retro-propulsion thrust adjustment."
+      },
+      {
+        "thought": "The mission is at risk. The lack of communication link adds to the critical situation.",
+        "confidence": 0.7,
+        "action_rejected": "Initiate emergency landing protocol."
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "HIGH",
+      "failure_mode_prediction": "The lander could crash due to the severe dust storm and abnormal drag coefficient, resulting in a hard landing or a catastrophic failure.",
+      "mitigation_strategy": "Adjust retro-propulsion thrust to achieve a soft landing. If the situation is critical, initiate emergency landing protocol."
+    },
+    "decision": {
+      "actuator_command": "Adjust retro-propulsion thrust to achieve a soft landing. Initiate emergency landing protocol if necessary.",
+      "expected_outcome": "Achieve a soft landing or initiate emergency landing protocol."
+    },
+    "self_reflection": "The situation is critical. The lack of communication link and the severe dust storm pose a significant risk to the mission. The decision to adjust retro-propulsion thrust and initiate emergency landing protocol must be made based on the current situation and available information."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "mars_edl_descent_monte_carlo",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 47.99999999997883,
+    "anomaly_type": "MARS_EDL_BLACKOUT"
+  },
+  "sha256_proof": "9e95dd083f314d9c01d59ccf9c7177815729d7a1df45159ebf61e2afe1f702d6"
+}

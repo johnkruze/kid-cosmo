@@ -1,0 +1,43 @@
+{
+  "mission_id": "COSMO_ORBITAL_STABILIZE",
+  "environment": "DEEPBLACK",
+  "timestamp": "2026-06-10T00:53:48.420981Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_ORBITAL_STABILIZE_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "ANOMALY_DETECTED",
+        "TELEMETRY_VARIANCE_HIGH",
+        "LINK_STATUS_BLACKOUT"
+      ],
+      "interpretation": "[Isolated (Dark Window)] System detecting non-nominal state: Satellite is in uncontrolled gyroscopic tumble. Spin rate exceeds 0.05 rad/s due to external micro-meteoroid torque impulses. Navigation star-trackers are blinded. Direct link to ground control severed. Local physics prior required to stabilize.. Sensors reporting divergence from expected trajectory."
+    },
+    "cognitive_load": 0.85,
+    "internal_deliberation": [
+      {
+        "thought": "Trajectory exceeds 2-sigma deviation. No external link available. Parameters may be compromised.",
+        "confidence": 0.9,
+        "action_rejected": "MAINTAIN_CURRENT_ATTITUDE"
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "HIGH",
+      "failure_mode_prediction": "Potential uncontrolled drift or system degradation.",
+      "mitigation_strategy": "Engage stabilization. Prioritize power conservation."
+    },
+    "decision": {
+      "actuator_command": "HOLD_POSITION",
+      "expected_outcome": "Maintain stability and wait for conditions to improve."
+    },
+    "self_reflection": "Operating in epistemic isolation. Physical intuition suggests conservative action."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "orbit_tumble_10k_6dof",
+    "parent_trajectory_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timestep_of_decision": 6.0,
+    "anomaly_type": "GYROSCOPIC_TUMBLE"
+  },
+  "sha256_proof": "3da0cbacd74343d3011a3ea6fb66d085d332246018414021d978a773a74a373e"
+}
