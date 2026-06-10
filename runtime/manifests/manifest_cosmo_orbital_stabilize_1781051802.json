@@ -1,0 +1,44 @@
+{
+  "mission_id": "COSMO_ORBITAL_STABILIZE",
+  "environment": "DEEPBLACK",
+  "timestamp": "2026-06-10T00:36:30.513176Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_ORBITAL_STABILIZE_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "Uncontrolled gyroscopic tumble detected",
+        "Spin rate exceeds 0.05 rad/s",
+        "Navigation star-trackers blinded",
+        "Direct link to ground control severed"
+      ],
+      "interpretation": "The satellite is experiencing severe rotational instability due to micro-meteoroid impacts. The navigation systems are compromised, and communication with ground control is lost. The current orientation and velocity are unpredictable, posing a significant risk to the satellite's structural integrity and operational capabilities."
+    },
+    "cognitive_load": 0.8,
+    "internal_deliberation": [
+      {
+        "thought": "The primary objective is to stabilize the satellite to prevent further damage and ensure safe re-entry or recovery. Given the current state, manual intervention is necessary to stabilize the satellite.",
+        "confidence": 0.9,
+        "action_rejected": ""
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "CRITICAL",
+      "failure_mode_prediction": "If the satellite remains in an uncontrolled state, it could lead to structural failure, loss of critical components, or even re-entry into the atmosphere with potential harm to the satellite's payload.",
+      "mitigation_strategy": "Initiate a stabilization maneuver using thrusters to counteract the micro-meteoroid torque impulses and bring the satellite back to a stable orientation."
+    },
+    "decision": {
+      "actuator_command": "Activate thrusters to counteract torque and stabilize orientation",
+      "expected_outcome": "The satellite should begin to stabilize, reducing the spin rate and allowing for re-establishment of navigation and communication systems."
+    },
+    "self_reflection": "The current situation is critical, and decisive action is required to prevent further damage. The stabilization maneuver is essential to ensure the satellite's survival and maintain mission objectives."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "orbit_tumble_10k_6dof",
+    "parent_trajectory_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timestep_of_decision": 6.0,
+    "anomaly_type": "GYROSCOPIC_TUMBLE"
+  },
+  "sha256_proof": "6538f103ab736c161402b4e011d222d067630d9a05518aaaa2afd7ed3d304d31"
+}

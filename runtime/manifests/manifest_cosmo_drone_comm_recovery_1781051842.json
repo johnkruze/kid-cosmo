@@ -1,0 +1,45 @@
+{
+  "mission_id": "COSMO_DRONE_COMM_RECOVERY",
+  "environment": "AV_HIGHWAY",
+  "timestamp": "2026-06-10T00:37:12.592093Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_DRONE_COMM_RECOVERY_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "Drift to 60000.0 km from base station",
+        "RF pathloss degradation to -62.23dB",
+        "Coherence dropped below resonance gate",
+        "Immediate command link dropout",
+        "Dark Window engaged"
+      ],
+      "interpretation": "The drone has drifted significantly from its base station, resulting in severe RF pathloss and loss of communication. The Dark Window has further compromised the ability to recover via standard means."
+    },
+    "cognitive_load": 0.8,
+    "internal_deliberation": [
+      {
+        "thought": "The primary risk is the loss of communication and the inability to return to the base station directly. The Dark Window complicates any attempt to establish a new communication link.",
+        "confidence": 0.9,
+        "action_rejected": "Attempt to establish a new communication link through standard means"
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "CRITICAL",
+      "failure_mode_prediction": "The drone will remain in an unknown location with no means of communication, potentially leading to loss of the drone.",
+      "mitigation_strategy": "Initiate emergency recovery protocol using onboard sensors and stored data to navigate back to the base station."
+    },
+    "decision": {
+      "actuator_command": "Navigate back to base station using onboard sensors and stored data",
+      "expected_outcome": "Return to base station with limited communication capabilities"
+    },
+    "self_reflection": "The event highlights the critical importance of robust communication systems and the need for fallback recovery protocols in high-risk environments."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "atheric_canopy_pathloss_fade",
+    "parent_trajectory_hash": "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1",
+    "timestep_of_decision": 2.0,
+    "anomaly_type": "RF_CONJUNCTION_BLACKOUT"
+  },
+  "sha256_proof": "18eae6e91fa50c98125c7e1b17fd6c53ca531812e456334aae9f4f56d38c2445"
+}

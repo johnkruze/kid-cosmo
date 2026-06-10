@@ -33,6 +33,33 @@ MODEL_PROFILES = {
         "speed": "25-40 t/s",
         "quality": "Deeper deliberation chains, better edge cases",
         "use_case": "Quality-focused manifest generation"
+    },
+
+    # Google Gemma 2 2B (Local) - Extremely fast local Google model
+    "gemma2-2b": {
+        "name": "Gemma-2-2b-it (Local Google)",
+        "path": "mlx-community/gemma-2-2b-it-4bit",
+        "speed": "60-100 t/s",
+        "quality": "Lightweight structured reasoning",
+        "use_case": "Real-time edge control and local reflex loops"
+    },
+
+    # Google Gemma 2 9B (Local) - Strong local reasoning
+    "gemma2-9b": {
+        "name": "Gemma-2-9b-it (Local Google)",
+        "path": "mlx-community/gemma-2-9b-it-4bit",
+        "speed": "20-35 t/s",
+        "quality": "High-fidelity somatic reasoning, great structure",
+        "use_case": "Deliberative local anomaly response"
+    },
+
+    # Gemini 2.5 Flash via REST API
+    "gemini": {
+        "name": "Gemini 2.5 Flash (Google Cloud)",
+        "path": "gemini-2.5-flash",
+        "speed": "Remote API",
+        "quality": "State-of-the-art multimodal / long context reasoning",
+        "use_case": "Comprehensive anomaly investigation & Monte Carlo analysis"
     }
     # Note: 32B removed - too tight for 24GB Apple Silicon, causes swap pressure
 }

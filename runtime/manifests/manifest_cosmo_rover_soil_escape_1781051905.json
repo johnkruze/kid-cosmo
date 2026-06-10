@@ -1,0 +1,43 @@
+{
+  "mission_id": "COSMO_ROVER_SOIL_ESCAPE",
+  "environment": "TERRAN",
+  "timestamp": "2026-06-10T00:38:19.994846Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_ROVER_SOIL_ESCAPE_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "Wheel sinkage exceeding 0.02 meters",
+        "Wheel slip ratio at 28%",
+        "High moisture loam substrate"
+      ],
+      "interpretation": "The rover is encountering a high moisture loam substrate, resulting in wheel sinkage and wheel slip. This indicates a potential for the rover to become stuck or lose traction, potentially impacting mission objectives."
+    },
+    "cognitive_load": 0.7,
+    "internal_deliberation": [
+      {
+        "thought": "The rover is likely experiencing traction issues due to the high moisture content of the soil. This could lead to a loss of control and potentially damage the rover.",
+        "confidence": 0.9,
+        "action_rejected": "Disable wheeled propulsion and engage alternative propulsion methods."
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "HIGH",
+      "failure_mode_prediction": "The rover could become stuck or lose control, potentially impacting mission objectives.",
+      "mitigation_strategy": "Disable wheeled propulsion and engage alternative propulsion methods, such as a tracked system or a more robust suspension system."
+    },
+    "decision": {
+      "actuator_command": "Disable wheeled propulsion and engage alternative propulsion methods.",
+      "expected_outcome": "The rover should be able to navigate the terrain without getting stuck or losing control."
+    },
+    "self_reflection": "The rover is encountering a challenging terrain, requiring a change in propulsion strategy to ensure safe navigation. The current situation demands a shift in tactics to ensure mission success."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "terran_loam_compaction_sink",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 4.0,
+    "anomaly_type": "SOIL_COMPACTION_TRAP"
+  },
+  "sha256_proof": "1be5816861c1c8dedf0ecc55b28555c517f3670cb33015dbb3cdb33daab73676"
+}

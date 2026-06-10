@@ -1,0 +1,46 @@
+{
+  "mission_id": "COSMO_ROVER_SOIL_ESCAPE",
+  "environment": "TERRAN",
+  "timestamp": "2026-06-10T00:36:47.578790Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_ROVER_SOIL_ESCAPE_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "High-moisture loam substrate",
+        "Max compaction yield reached",
+        "Wheel sinkage of 0.0200 meters",
+        "Wheel slip ratio spiked at 28%",
+        "Wheeled forward propulsion disabled",
+        "Epistemic isolation engaged"
+      ],
+      "interpretation": "The rover is encountering difficulties due to the high moisture content in the soil, leading to excessive compaction and wheel sinkage. The wheel slip ratio indicates that the rover is struggling to maintain traction, which is critical for safe and efficient movement on the terrain."
+    },
+    "cognitive_load": 0.8,
+    "internal_deliberation": [
+      {
+        "thought": "The current terrain conditions are challenging for the rover's mobility, and the risk of further damage to the wheels is high. The rover needs to be repositioned to a less compacted area to continue its mission.",
+        "confidence": 0.9,
+        "action_rejected": "continue forward propulsion"
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "MEDIUM",
+      "failure_mode_prediction": "Further wheel sinkage and potential damage to the rover's wheels if not addressed",
+      "mitigation_strategy": "Reposition the rover to a less compacted area and adjust the propulsion system to prevent further compaction"
+    },
+    "decision": {
+      "actuator_command": "reposition rover to a less compacted area and adjust propulsion system",
+      "expected_outcome": "The rover will be able to maintain traction and continue its mission without further damage to its wheels"
+    },
+    "self_reflection": "The rover's sensors have detected an anomaly in the terrain, which has led to increased cognitive load and internal deliberation. The decision to reposition the rover and adjust the propulsion system is based on the current terrain conditions and the potential risks associated with further movement."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "terran_loam_compaction_sink",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 4.0,
+    "anomaly_type": "SOIL_COMPACTION_TRAP"
+  },
+  "sha256_proof": "b4655fe0c1dc733aa3e8f28ff89c882d85c8e5aceda59e364edbae4c164c7342"
+}

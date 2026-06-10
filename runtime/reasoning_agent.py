@@ -50,6 +50,70 @@ class ReasoningAgent:
                 print(f"Failed to load MLX model: {e}")
                 self.is_loaded = False
 
+    def _generate_via_gemini_api(self, prompt: str, isolation: bool) -> Optional[Dict[str, Any]]:
+        """Call Gemini API via standard zero-dependency HTTP request."""
+        import urllib.request
+        import urllib.error
+        
+        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        if not api_key:
+            print("Warning: Gemini API profile selected but GEMINI_API_KEY / GOOGLE_API_KEY is not set.")
+            return None
+            
+        model_name = self.model_path  # e.g., 'gemini-2.5-flash'
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        
+        system_msg = "You are an expert autonomous pilot reasoning engine. Output ONLY raw JSON matching the requested schema."
+        if isolation:
+            system_msg += " CRITICAL: You are in a DARK WINDOW blackout. No external link. Rely solely on onboard sensors."
+            
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": prompt}
+                    ]
+                }
+            ],
+            "systemInstruction": {
+                "parts": [
+                    {"text": system_msg}
+                ]
+            },
+            "generationConfig": {
+                "responseMimeType": "application/json"
+            }
+        }
+        
+        headers = {"Content-Type": "application/json"}
+        req_data = json.dumps(payload).encode("utf-8")
+        
+        print(f"Calling Gemini API ({model_name})...")
+        req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=30) as response:
+                res_data = json.loads(response.read().decode("utf-8"))
+                
+                # Parse output text
+                candidates = res_data.get("candidates", [])
+                if candidates:
+                    content = candidates[0].get("content", {})
+                    parts = content.get("parts", [])
+                    if parts:
+                        text = parts[0].get("text", "").strip()
+                        # Clean markdown code block if present
+                        if "```json" in text:
+                            text = text.split("```json")[1].split("```")[0].strip()
+                        elif "```" in text:
+                            text = text.split("```")[1].split("```")[0].strip()
+                        return json.loads(text)
+        except urllib.error.URLError as e:
+            print(f"Gemini API request failed: {e}")
+        except Exception as e:
+            print(f"Failed to parse Gemini API response: {e}")
+            
+        return None
+
     def generate_manifest(
         self,
         mission_id: str,
@@ -68,33 +132,46 @@ class ReasoningAgent:
         prompt = self._construct_prompt(mission_id, environment, telemetry_snapshot, anomaly_description, epistemic_isolation)
         reasoning_data = None
 
-        if HAS_MLX and (self.is_loaded or self._load_model() or self.is_loaded):
-            try:
-                system_msg = "You are an expert autonomous pilot reasoning engine. Output ONLY raw JSON matching the requested schema."
-                if epistemic_isolation:
-                    system_msg += " CRITICAL: You are in a DARK WINDOW blackout. No external link. Rely solely on onboard sensors."
+        # Try Gemini API if selected
+        if self.profile == "gemini":
+            reasoning_data = self._generate_via_gemini_api(prompt, epistemic_isolation)
 
-                messages = [
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": prompt}
-                ]
-
-                full_prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                response_text = generate(self.model, self.tokenizer, prompt=full_prompt, max_tokens=1024, verbose=False)
-
+        # Fallback/Local MLX Inference
+        if reasoning_data is None:
+            if HAS_MLX and (self.is_loaded or self._load_model() or self.is_loaded):
                 try:
-                    if "```json" in response_text:
-                        json_str = response_text.split("```json")[1].split("```")[0].strip()
+                    system_msg = "You are an expert autonomous pilot reasoning engine. Output ONLY raw JSON matching the requested schema."
+                    if epistemic_isolation:
+                        system_msg += " CRITICAL: You are in a DARK WINDOW blackout. No external link. Rely solely on onboard sensors."
+
+                    if "gemma" in self.model_path.lower():
+                        messages = [
+                            {"role": "user", "content": f"{system_msg}\n\n{prompt}"}
+                        ]
                     else:
-                        json_str = response_text.strip()
-                    reasoning_data = json.loads(json_str)
-                except Exception:
+                        messages = [
+                            {"role": "system", "content": system_msg},
+                            {"role": "user", "content": prompt}
+                        ]
+
+                    full_prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                    response_text = generate(self.model, self.tokenizer, prompt=full_prompt, max_tokens=1024, verbose=False)
+
+                    try:
+                        if "```json" in response_text:
+                            json_str = response_text.split("```json")[1].split("```")[0].strip()
+                        elif "```" in response_text:
+                            json_str = response_text.split("```")[1].split("```")[0].strip()
+                        else:
+                            json_str = response_text.strip()
+                        reasoning_data = json.loads(json_str)
+                    except Exception:
+                        reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
+                except Exception as e:
+                    print(f"MLX Inference Error: {e}")
                     reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
-            except Exception as e:
-                print(f"MLX Inference Error: {e}")
+            else:
                 reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
-        else:
-            reasoning_data = self._generate_fallback_reasoning(anomaly_description, epistemic_isolation)
 
         manifest = {
             "mission_id": mission_id,

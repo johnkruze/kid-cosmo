@@ -1,0 +1,43 @@
+{
+  "mission_id": "COSMO_ROVER_SOIL_ESCAPE",
+  "environment": "TERRAN",
+  "timestamp": "2026-06-10T00:37:26.663287Z",
+  "is_dark_window": true,
+  "telemetry_ref": "COSMO_ROVER_SOIL_ESCAPE_telemetry.json",
+  "epistemic_status": "503_BLACKOUT",
+  "agent_reasoning": {
+    "sensory_synthesis": {
+      "inputs": [
+        "ANOMALY_DETECTED",
+        "TELEMETRY_VARIANCE_HIGH",
+        "LINK_STATUS_BLACKOUT"
+      ],
+      "interpretation": "[Isolated (Dark Window)] System detecting non-nominal state: Lunar rover traversing a high-moisture loam substrate. Soil yield max compaction has reached 0.2141, resulting in wheel sinkage of 0.0200 meters. Wheel slip ratio is spiked at 28%. Wheeled forward propulsion is disabled to prevent digging-in. Epistemic isolation engaged.. Sensors reporting divergence from expected trajectory."
+    },
+    "cognitive_load": 0.85,
+    "internal_deliberation": [
+      {
+        "thought": "Trajectory exceeds 2-sigma deviation. No external link available. Parameters may be compromised.",
+        "confidence": 0.9,
+        "action_rejected": "MAINTAIN_CURRENT_ATTITUDE"
+      }
+    ],
+    "mission_assurance_check": {
+      "risk_level": "HIGH",
+      "failure_mode_prediction": "Potential uncontrolled drift or system degradation.",
+      "mitigation_strategy": "Engage stabilization. Prioritize power conservation."
+    },
+    "decision": {
+      "actuator_command": "HOLD_POSITION",
+      "expected_outcome": "Maintain stability and wait for conditions to improve."
+    },
+    "self_reflection": "Operating in epistemic isolation. Physical intuition suggests conservative action."
+  },
+  "trajectory_context": {
+    "parent_trajectory_id": "terran_loam_compaction_sink",
+    "parent_trajectory_hash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "timestep_of_decision": 4.0,
+    "anomaly_type": "SOIL_COMPACTION_TRAP"
+  },
+  "sha256_proof": "a1975268032fd78cd258f22b77205d069f108eb5bffea05d482d04d628aefad5"
+}
