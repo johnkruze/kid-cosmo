@@ -95,6 +95,6 @@ Reasoning layer: operational
 Hardware integration: MAVLink active
 OS expansion: in progress
 
-Protocol Company. John Kruze. johnfkruze@gmail.com
+John Kruze · kruze@zerotrustphysics.com
 
 *"The body knows before the mind. The force is felt before it is named."*
