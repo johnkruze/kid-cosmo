@@ -12,7 +12,7 @@ The body data lives here. The decisions live here. The sovereignty lives here.
 
 ```
 G^G CORPUS (physics ground truth)
-  G^G Parquet datasets — 14 substrates, 1000Hz, SHA-256 sealed per step
+  G^G Parquet datasets — 14 substrates, 1000Hz, SHA-256 attested per step
   Mars, Orbital, Marine, Terran, Mycelial,
   Energy, Atheric, Plutonian, Celestial, Asteroid,
   Tokamak, Swing, Reactor, Josephson
@@ -37,7 +37,7 @@ HARDWARE (the body)
 
 1. **Monitors for Dark Window conditions** — GPS loss, comms blackout, sensor failure
 2. **Triggers Sovereign Reasoning** — local inference, no cloud dependency, no uplink required
-3. **Outputs Reasoning Manifests** — every decision paired to its parent physics trajectory, SHA-256 sealed
+3. **Outputs Reasoning Manifests** — every decision paired to its parent physics trajectory, SHA-256 signed
 4. **Accumulates Embodied Memory** — procedural knowledge that compounds across runs
 5. **Hardware Bridge** — MAVLink integration for direct actuation
 
