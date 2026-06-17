@@ -12,9 +12,10 @@ The body data lives here. The decisions live here. The sovereignty lives here.
 
 ```
 G^G CORPUS (physics ground truth)
-  G^G Parquet datasets — 13 substrates, 1000Hz, SHA-256 sealed per step
+  G^G Parquet datasets — 14 substrates, 1000Hz, SHA-256 sealed per step
   Mars, Orbital, Marine, Terran, Mycelial,
-  Energy, Atheric, Plutonian, Celestial, Asteroid + 3 more
+  Energy, Atheric, Plutonian, Celestial, Asteroid,
+  Tokamak, Swing, Reactor, Josephson
   SHA-256 verified. ICP timestamped.
         |
         v
@@ -88,10 +89,16 @@ Every decision is cryptographically anchored to its physics:
 
 ---
 
+## VLA Somatic Bridge
+
+[`zero-trust-physics/vla_somatic_bridge.py`](https://github.com/johnkruze/zero-trust-physics) demonstrates the spinal reflex loop in action — a VLA controller running at 5Hz fails to catch a payload slip that the 1000Hz somatic layer catches in 16ms. This is the gap Kid Cosmo closes: not replacing the planner, but giving it a body that can feel before it can think.
+
+---
+
 ## Status
 
-Physics corpus: G^G Parquet datasets live (May 2026)
-Reasoning layer: operational
+Physics corpus: G^G Parquet datasets live (June 2026)
+Reasoning layer: operational (MLX, Gemma, Qwen 2.5 7B)
 Hardware integration: MAVLink active
 OS expansion: in progress
 
